@@ -33,12 +33,14 @@ public class OrderController {
     @GetMapping
     List<OrderSummary> getOrders() {
         String userName = securityService.getLoginUserName();
+        System.out.println("getOrders called");
         return orderService.findOrders(userName);
     }
 
     @GetMapping("/{orderId}")
     OrderDTO getOrder(@PathVariable String orderId) {
         String userName = securityService.getLoginUserName();
+        System.out.println("getOrder called");
         return orderService.findUserOrders(userName, orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 }

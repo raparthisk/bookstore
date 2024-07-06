@@ -18,12 +18,15 @@ tasks:
       - "{{.MVNW}} clean verify"
 
   format:
+    deps: [format]
     cmds:
       - "{{.MVNW}} spotless:apply"
 
   build:
     cmds:
       - "{{.MVNW}} -pl catalog-service spring-boot:build-image -DskipTests"
+      - "{{.MVNW}} -pl order-service spring-boot:build-image -DskipTests"
+      - "{{.MVNW}} -pl notification-service spring-boot:build-image -DskipTests"
 
   start_infra:
     cmds:
