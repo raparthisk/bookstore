@@ -8,7 +8,6 @@ import com.rlabs.notification_service.domain.models.OrderErrorEvent;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -20,12 +19,13 @@ public class NotificationService {
     private final ApplicationProperties applicationProperties;
     private final Logger log = LoggerFactory.getLogger(NotificationService.class);
 
-    NotificationService(JavaMailSender emailSender, ApplicationProperties applicationProperties){
+    NotificationService(JavaMailSender emailSender, ApplicationProperties applicationProperties) {
         this.emailSender = emailSender;
         this.applicationProperties = applicationProperties;
     }
-    private void sendEmail(String recipient, String subject, String content){
-        try{
+
+    private void sendEmail(String recipient, String subject, String content) {
+        try {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setFrom(applicationProperties.supportEmail());
@@ -34,7 +34,7 @@ public class NotificationService {
             helper.setText(content);
             emailSender.send(mimeMessage);
             log.info("Email sent to: {}", recipient);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
             throw new RuntimeException("Error while sending email", e);
         }

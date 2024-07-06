@@ -15,48 +15,52 @@ public class OrderEventHandler {
     private final Logger log = LoggerFactory.getLogger(OrderEventHandler.class);
     private final OrderEventRepository orderEventRepository;
 
-    OrderEventHandler(NotificationService notificationService, OrderEventRepository orderEventRepository){
+    OrderEventHandler(NotificationService notificationService, OrderEventRepository orderEventRepository) {
         this.notificationService = notificationService;
         this.orderEventRepository = orderEventRepository;
     }
+
     @RabbitListener(queues = "${notification.new-orders-queue}")
-    void handlerCreateOrderEvent(OrderCreatedEvent event){
-        log.info("Order Create Event: "+ event);
-        if(orderEventRepository.existsByEventId(event.eventId())){
-            log.info("Duplicate Order Create Event: "+ event);
+    void handlerCreateOrderEvent(OrderCreatedEvent event) {
+        log.info("Order Create Event: " + event);
+        if (orderEventRepository.existsByEventId(event.eventId())) {
+            log.info("Duplicate Order Create Event: " + event);
             return;
         }
         notificationService.sendOrderCreatedNotification(event);
         var entity = new OrderEventEntity(event.eventId());
         orderEventRepository.save(entity);
     }
+
     @RabbitListener(queues = "${notification.cancelled-orders-queue}")
-    void handlerCancelledOrderEvent(OrderCancelledEvent event){
-        log.info("Order Cancelled Event: "+ event);
-        if(orderEventRepository.existsByEventId(event.eventId())){
-            log.info("Duplicate Order Cancelled Event: "+ event);
+    void handlerCancelledOrderEvent(OrderCancelledEvent event) {
+        log.info("Order Cancelled Event: " + event);
+        if (orderEventRepository.existsByEventId(event.eventId())) {
+            log.info("Duplicate Order Cancelled Event: " + event);
             return;
         }
         notificationService.sendOrderCancelledNotification(event);
         var entity = new OrderEventEntity(event.eventId());
         orderEventRepository.save(entity);
     }
+
     @RabbitListener(queues = "${notification.delivered-orders-queue}")
-    void handlerDeliveredOrderEvent(OrderDeliveredEvent event){
-        log.info("Order Delivered Event: "+ event);
-        if(orderEventRepository.existsByEventId(event.eventId())){
-            log.info("Duplicate Order Delivered Event: "+ event);
+    void handlerDeliveredOrderEvent(OrderDeliveredEvent event) {
+        log.info("Order Delivered Event: " + event);
+        if (orderEventRepository.existsByEventId(event.eventId())) {
+            log.info("Duplicate Order Delivered Event: " + event);
             return;
         }
         notificationService.sendOrderDeliveredNotification(event);
         var entity = new OrderEventEntity(event.eventId());
         orderEventRepository.save(entity);
     }
+
     @RabbitListener(queues = "${notification.error-orders-queue}")
-    void handlerCreateOrderEvent(OrderErrorEvent event){
-        log.info("Order Error Event: "+ event);
-        if(orderEventRepository.existsByEventId(event.eventId())){
-            log.info("Duplicate Order Error Event: "+ event);
+    void handlerCreateOrderEvent(OrderErrorEvent event) {
+        log.info("Order Error Event: " + event);
+        if (orderEventRepository.existsByEventId(event.eventId())) {
+            log.info("Duplicate Order Error Event: " + event);
             return;
         }
         notificationService.sendOrderErrorEventNotification(event);

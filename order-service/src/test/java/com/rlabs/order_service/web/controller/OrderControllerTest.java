@@ -11,7 +11,6 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -52,8 +51,7 @@ class OrderControllerTest extends AbstractIT {
                             ]
                         }
                     """;
-            given()
-                    .contentType(ContentType.JSON)
+            given().contentType(ContentType.JSON)
                     .body(payload)
                     .when()
                     .post("/api/orders")
@@ -65,8 +63,7 @@ class OrderControllerTest extends AbstractIT {
         @Test
         void shouldReturnBadRequestWhenMandatoryDataIsMissing() {
             var payload = TestDataFactory.createOrderRequestWithInvalidCustomer();
-            given()
-                    .contentType(ContentType.JSON)
+            given().contentType(ContentType.JSON)
                     .body(payload)
                     .when()
                     .post("/api/orders")
@@ -74,12 +71,12 @@ class OrderControllerTest extends AbstractIT {
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
     }
+
     @Nested
     class GetOrderTests {
         @Test
         void shouldCreateOrderSuccessfully() {
-            List<OrderSummary> order = given()
-                    .when()
+            List<OrderSummary> order = given().when()
                     .get("/api/orders")
                     .then()
                     .statusCode(HttpStatus.OK.value())
@@ -89,6 +86,7 @@ class OrderControllerTest extends AbstractIT {
             Assertions.assertThat(order).hasSize(2);
         }
     }
+
     @Nested
     class GetOrderByOrderNumberTests {
         String orderNumber = "order-123";
