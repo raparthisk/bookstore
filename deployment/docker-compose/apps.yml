@@ -22,8 +22,8 @@ services:
       logging: "promtail"
 
   order-service:
-    image: raparthisk45/bookstore-orders-service
-    container_name: orders-service
+    image: raparthisk45/bookstore-order-service
+    container_name: order-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - DB_URL=jdbc:postgresql://orders-db:5432/postgres
@@ -33,6 +33,7 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
+      - ORDERS_CATALOG_SERVICE_URL=http://catalog-service:8081
     ports:
       - "8082:8082"
     restart: unless-stopped
