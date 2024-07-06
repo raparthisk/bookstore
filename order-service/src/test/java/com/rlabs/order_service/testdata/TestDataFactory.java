@@ -15,6 +15,12 @@ public class TestDataFactory {
     static final List<String> VALID_COUNTIES = List.of("India", "Germany");
     static final Set<OrderItem> VALID_ORDER_ITEMS =
             Set.of(new OrderItem("P100", "Product 1", new BigDecimal("25.50"), 1));
+
+    static final Set<OrderItem> INVALID_ORDER_ITEMS_BY_PRODUCT_ID =
+            Set.of(new OrderItem("P999", "Product 1", new BigDecimal("25.50"), 1));
+
+    static final Set<OrderItem> INVALID_ORDER_ITEMS_BY_PRICE =
+            Set.of(new OrderItem("P999", "Product 1", new BigDecimal("15.50"), 1));
     static final Set<OrderItem> INVALID_ORDER_ITEMS =
             Set.of(new OrderItem("ABCD", "Product 1", new BigDecimal("25.50"), 1));
 
@@ -48,6 +54,22 @@ public class TestDataFactory {
                 .generate(field(Customer::email), gen -> gen.text().pattern("#c#c#c#c#d#d@mail.com"))
                 .generate(field(Address::country), gen -> gen.oneOf(VALID_COUNTIES))
                 .set(field(CreateOrderRequest::items), Set.of())
+                .create();
+    }
+
+    public static CreateOrderRequest createOrderRequestWithInvalidProductId() {
+        return Instancio.of(CreateOrderRequest.class)
+                .generate(field(Customer::email), gen -> gen.text().pattern("#c#c#c#c#d#d@mail.com"))
+                .generate(field(Address::country), gen -> gen.oneOf(VALID_COUNTIES))
+                .set(field(CreateOrderRequest::items), INVALID_ORDER_ITEMS_BY_PRODUCT_ID)
+                .create();
+    }
+
+    public static CreateOrderRequest createOrderRequestWithInvalidPrice() {
+        return Instancio.of(CreateOrderRequest.class)
+                .generate(field(Customer::email), gen -> gen.text().pattern("#c#c#c#c#d#d@mail.com"))
+                .generate(field(Address::country), gen -> gen.oneOf(VALID_COUNTIES))
+                .set(field(CreateOrderRequest::items), INVALID_ORDER_ITEMS_BY_PRICE)
                 .create();
     }
 }

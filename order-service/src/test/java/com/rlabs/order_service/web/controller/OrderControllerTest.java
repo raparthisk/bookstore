@@ -6,6 +6,7 @@ import com.rlabs.order_service.AbstractIT;
 import com.rlabs.order_service.testdata.TestDataFactory;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ class OrderControllerTest extends AbstractIT {
     class CreateOrderTests {
         @Test
         void shouldCreateOrderSuccessfully() {
+            mockGetByProductCode("P100", "Product 1", new BigDecimal("25.50"));
             var payload =
                     """
                         {

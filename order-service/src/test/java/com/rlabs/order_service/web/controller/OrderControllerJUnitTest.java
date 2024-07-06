@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rlabs.order_service.domain.InvalidOrderException;
 import com.rlabs.order_service.domain.OrderService;
 import com.rlabs.order_service.domain.SecurityService;
 import com.rlabs.order_service.domain.models.CreateOrderRequest;
@@ -40,14 +41,26 @@ public class OrderControllerJUnitTest {
 
     @BeforeEach
     void setUp() {
-        given(securityService.getLoginUserName()).willReturn("siva");
+        given(securityService.getLoginUserName()).willReturn("rap");
     }
 
     @ParameterizedTest(name = "[{index}]-{0}")
     @MethodSource("createOrderRequestProvider")
     void shouldReturnBadRequestWhenOrderPayloadIsInvalid(CreateOrderRequest request) throws Exception {
-        given(orderService.createOrder(eq("siva"), any(CreateOrderRequest.class)))
+        given(orderService.createOrder(eq("rap"), any(CreateOrderRequest.class)))
                 .willReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest(name = "[{index}]-{0}")
+    @MethodSource("createOrderRequestProviderForInvalid")
+    void shouldReturnBadRequestWhenProductIsInvalid(CreateOrderRequest request) throws Exception {
+        given(orderService.createOrder(eq("rap"), any(CreateOrderRequest.class)))
+                .willThrow(new InvalidOrderException("Price Mismatch"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/orders")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -63,5 +76,12 @@ public class OrderControllerJUnitTest {
                         "Order with Invalid Delivery Address",
                         TestDataFactory.createOrderRequestWithInvalidDeliveryAddress())),
                 arguments(named("Order with No Items", TestDataFactory.createOrderRequestWithNoItems())));
+    }
+
+    static Stream<Arguments> createOrderRequestProviderForInvalid() {
+        return Stream.of(
+                arguments(named(
+                        "Order with Invalid Product Id", TestDataFactory.createOrderRequestWithInvalidProductId())),
+                arguments(named("Order with Invalid Price", TestDataFactory.createOrderRequestWithInvalidPrice())));
     }
 }
