@@ -1,4 +1,4 @@
-aname: API Gateway
+name: API Gateway
 
 on:
   push:
