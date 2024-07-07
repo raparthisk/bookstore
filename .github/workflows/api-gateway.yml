@@ -1,9 +1,9 @@
-aname: Catalog Service
+aname: API Gateway
 
 on:
   push:
     paths:
-      - catalog-service/**
+      - api-gateway/**
     branches:
       - '**'
   pull_request:
@@ -14,8 +14,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
-      working-directory: ./catalog-service
-      DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-catalog-service
+      working-directory: ./api-gateway
+      DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bookstore-api-gateway
     defaults:
       run:
         working-directory: ${{ env.working-directory }}
