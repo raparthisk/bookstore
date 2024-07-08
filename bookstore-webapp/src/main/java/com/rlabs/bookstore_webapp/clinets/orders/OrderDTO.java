@@ -1,19 +1,17 @@
-package com.rlabs.order_service.domain.models;
+package com.rlabs.bookstore_webapp.clinets.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 public record OrderDTO(
+        Long id,
         String orderNumber,
-        String user,
         Set<OrderItem> items,
         Customer customer,
         Address deliveryAddress,
         OrderStatus status,
-        String comments,
-        LocalDateTime createdAt) {
+        String comments) {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public BigDecimal getTotalAmount() {
